@@ -6,7 +6,7 @@
 \alias{flowdockr-package}
 \title{Tools to Work with Flowdock}
 \description{
-Tools to Work with Flowdock
+Heavily based on \href{http://github.com/hrbrmstr/slackr}{slackr}.
 }
 \author{
 Bob Rudis (@hrbrmstr)

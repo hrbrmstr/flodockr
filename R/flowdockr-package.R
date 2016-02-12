@@ -1,5 +1,7 @@
 #' Tools to Work with Flowdock
 #'
+#' Heavily based on \href{http://github.com/hrbrmstr/slackr}{slackr}.
+#'
 #' @name flowdockr
 #' @docType package
 #' @author Bob Rudis (@@hrbrmstr)
