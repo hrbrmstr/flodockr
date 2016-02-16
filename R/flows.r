@@ -10,11 +10,18 @@
 #' @return parsed call result (invisibly)
 #' @export
 list_flows <- function(all=FALSE, flowdock_api_key=Sys.getenv("FLOWDOCK_PAT")) {
+
   res <- GET("https://api.flowdock.com",
              path=if(all) { "/flows/all" } else { "/flows" },
              authenticate(user=flowdock_api_key, password=""))
+
   stop_for_status(res)
+
   dat <- fromJSON(content(res, as="text"), flatten=TRUE)
-  arrange(dat, parameterized_name)
+
+  dplyr::arrange(dat, parameterized_name)
+
 }
 
+# for the love of CRAN
+parameterized_name <- NULL

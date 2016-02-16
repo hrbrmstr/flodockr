@@ -22,7 +22,7 @@ flow_file <- function(fil=NULL,
     stop("You don't have access to that flow", call.=FALSE)
   }
 
-  target_flow <- filter(accessible_flows, parameterized_name == flow)
+  target_flow <- dplyr::filter(accessible_flows, parameterized_name == flow)
 
   flow_fil <- upload_file(path.expand(fil))
 
@@ -37,6 +37,7 @@ flow_file <- function(fil=NULL,
                 tags=tags
               ),
               authenticate(user=flowdock_api_key, password=""))
+
   stop_for_status(res)
   dat <- fromJSON(content(res, as="text"), flatten=TRUE)
   invisible(dat)

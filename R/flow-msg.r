@@ -22,18 +22,19 @@ flow_msg <- function(message=NULL,
     stop("You don't have access to that flow", call.=FALSE)
   }
 
-  target_flow <- filter(accessible_flows, parameterized_name == flow)
+  target_flow <- dplyr::filter(accessible_flows, parameterized_name == flow)
 
   res <- POST("https://api.flowdock.com",
               path=sprintf("flows/%s/%s/messages",
                            target_flow$organization.parameterized_name,
                            flow),
-              query=list(
+              body=list(
                 event="message",
                 content=message,
                 tags=tags
               ),
               authenticate(user=flowdock_api_key, password=""))
+
   stop_for_status(res)
   dat <- fromJSON(content(res, as="text"), flatten=TRUE)
   invisible(dat)

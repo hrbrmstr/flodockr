@@ -15,11 +15,15 @@ dev_flow <- function(...,
                      tags="",
                      flowdock_api_key=Sys.getenv("FLOWDOCK_PAT")) {
 
-  Sys.setlocale('LC_ALL','C')
+  loc <- Sys.getlocale('LC_CTYPE')
+  Sys.setlocale('LC_CTYPE','C')
+  on.exit(Sys.setlocale("LC_CTYPE", loc))
 
   ftmp <- tempfile(file, fileext=".png")
   dev.copy(png, file=ftmp, ...)
   dev.off()
+
+  on.exit(unlink(ftmp), add=TRUE)
 
   res <- flow_file(ftmp, flow, tags=tags, flowdock_api_key=flowdock_api_key)
 

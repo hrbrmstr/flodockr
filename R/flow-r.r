@@ -22,7 +22,7 @@ flow_r <- function(...,
     stop("You don't have access to that flow", call.=FALSE)
   }
 
-  target_flow <- filter(accessible_flows, parameterized_name == flow)
+  target_flow <- dplyr::filter(accessible_flows, parameterized_name == flow)
 
   resp_ret <- ""
 
@@ -37,12 +37,12 @@ flow_r <- function(...,
 
     # setup in-memory sink
     rval <- NULL
-    file <- textConnection("rval", "w", local = TRUE)
+    fil <- textConnection("rval", "w", local = TRUE)
 
-    sink(file)
+    sink(fil)
     on.exit({
       sink()
-      close(file)
+      close(fil)
     })
 
     # where we'll need to eval expressions
@@ -77,16 +77,16 @@ flow_r <- function(...,
                     logical = ,
                     numeric = cat(sprintf("%s\n\n", as.character(expr))),
                     character = cat(sprintf("%s\n\n", expr)),
-                    stop("mode of argument not handled at present by slackr"))
+                    stop("mode of argument not handled at present by flowdockr"))
 
       for (item in tmp) if (item$visible) { print(item$value); cat("\n") }
 
     }
 
-    on.exit()
-
     sink()
-    close(file)
+    close(fil)
+
+    on.exit()
 
     # combined all of them (rval is a character vector)
     output <- paste0(rval, collapse="\n")
@@ -95,7 +95,7 @@ flow_r <- function(...,
                 path=sprintf("flows/%s/%s/messages",
                              target_flow$organization.parameterized_name,
                              flow),
-                query=list(
+                body=list(
                   event="message",
                   content=sprintf("```\n%s\n```", output),
                   tags=tags
@@ -103,8 +103,6 @@ flow_r <- function(...,
                 authenticate(user=flowdock_api_key, password=""))
     stop_for_status(res)
     dat <- fromJSON(content(res, as="text"), flatten=TRUE)
-
-  } else {
 
   }
 
